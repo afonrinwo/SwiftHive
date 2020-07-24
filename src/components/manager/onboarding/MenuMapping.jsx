@@ -29,25 +29,31 @@ export class MenuMapping extends Component {
     handleCheckBoxChange = event => {
         event.preventDefault()
         let userMenu = this.state.selectedMenu;
-        userMenu = userMenu.concat("|" + event.target.value)
-        this.setState({
-            selectedMenu: userMenu
-        });
-
+        if (event.target.checked) {
+            userMenu = userMenu.concat("|" + event.target.value)
+            this.setState({
+                selectedMenu: userMenu
+            });
+        } else{
+            userMenu = userMenu.replace("|" + event.target.value, "");
+            this.setState({
+                selectedMenu: userMenu
+            });
+        }
     }
 
     componentDidMount() {
-        let today = new Date();
-        let currentDateTime = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
-        let clientIdStr = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate() + "-" + today.getHours() + "-" + today.getMinutes() + "-" + today.getSeconds() + "-" + today.getMilliseconds();
-        let clientId = clientIdStr.replace(/-/g, '');
+
+        let clientId = Util("clientId");
+        let logTime = Util("logTime");
+        let userId = "emmanuel.afonrinwo";
         try {
             Axios
                 .get('http://localhost:7070/swifthivebe/listUserFunction')
                 .then(response => {
                     this.setState({ userFunctions: response.data });
                 }, (error) => {
-                        LogHandler("trace", clientId, "MenuMapping", error, currentDateTime);
+                    LogHandler("trace", clientId, userId, "MenuMapping", "Sytem auto loadding of user function ", "Failed", error.message, logTime);
                     window.alert("The System Encountered " + error);
                     window.location.href = "/admin/onboarding/menuMapping";
                 });
@@ -57,7 +63,7 @@ export class MenuMapping extends Component {
                 .then(response => {
                     this.setState({ userRoles: response.data });
                 }, (error) => {
-                        LogHandler("trace", clientId, "MenuMapping", error, currentDateTime);
+                    LogHandler("trace", clientId, userId, "MenuMapping", "Sytem auto loadding of user role", "Failed", error.message, logTime);
                     window.alert("The System Encountered " + error);
                     window.location.href = "/admin/onboarding/menuMapping";
                 });
@@ -67,14 +73,14 @@ export class MenuMapping extends Component {
                 .then(response => {
                     this.setState({ userMenus: response.data });
                 }, (error) => {
-                        LogHandler("trace", clientId, "MenuMapping", error, currentDateTime);
+                    LogHandler("trace", clientId, userId, "MenuMapping", "Sytem auto loadding of user menu", "Failed", error.message, logTime);
                     window.alert("The System Encountered " + error);
                     window.location.href = "/admin/onboarding/menuMapping";
                 });
 
 
         } catch (error) {
-            LogHandler("trace", clientId, "MenuMapping", error, currentDateTime);
+            LogHandler("trace", clientId, userId, "MenuMapping", "Sytem auto loadding of user function, role and menu ", "Failed", error.message, logTime);
             window.alert("The System Encountered " + error);
             window.location.href = "/admin/onboarding/menuMapping";
         }
@@ -85,10 +91,8 @@ export class MenuMapping extends Component {
         event.preventDefault()
         let selectedMenuList = this.state.selectedMenu.substring(1);
         const { functionName, roleName } = this.state
-        let today = new Date();
-        let currentDateTime = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
-        let clientIdStr = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate() + "-" + today.getHours() + "-" + today.getMinutes() + "-" + today.getSeconds() + "-" + today.getMilliseconds();
-        let clientId = clientIdStr.replace(/-/g, '');
+        let clientId = Util("clientId");
+        let logTime = Util("logTime");
         let userId = "emmanuel.afonrinwo";
         try {
             Axios.post('http://localhost:7070/swifthivebe/menuMapping',
@@ -110,23 +114,23 @@ export class MenuMapping extends Component {
             ).then((response) => {
                 if (response.status === 200) {
                     if (response.data.responseCode === "00") {
-                        LogHandler("audit", clientId, "MenuMapping", response.data.responseMessage, currentDateTime);
+                        LogHandler("audit", clientId, userId, "MenuMapping", "User Mapped function, role to menus for : " + functionName + " with role : " + roleName + " to : " + selectedMenuList, "Successful", response.data.responseMessage, logTime);
                         window.alert("Menu Mapping was done successfully.");
                         window.location.href = "/admin/onboarding/menuMapping";
                     } else {
-                        LogHandler("trace", clientId, "MenuMapping", response.data.responseMessage, currentDateTime);
+                        LogHandler("trace", clientId, userId, "MenuMapping", "User Mapped function, role to menus for : " + functionName + " with role : " + roleName + " to : " + selectedMenuList, "Failed", response.data.responseMessage, logTime);
                         window.alert("Menu Mapping Failed: " + response.data.responseMessage);
                         window.location.href = "/admin/onboarding/menuMapping";
                     }
                 }
             }, (error) => {
-                LogHandler("trace", clientId, "MenuMapping", error, currentDateTime);
+                LogHandler("trace", clientId, userId, "MenuMapping", "User Mapped function, role to menus for : " + functionName + " with role : " + roleName + " to : " + selectedMenuList, "Failed", error.message, logTime);
                 window.alert("Menu Mapping Failed. " + error);
                 window.location.href = "/admin/onboarding/menuMapping";
             });
 
         } catch (error) {
-            LogHandler("trace", clientId, "MenuMapping", error, currentDateTime);
+            LogHandler("trace", clientId, userId, "MenuMapping", "User Mapped function, role to menus for : " + functionName + " with role : " + roleName + " to : " + selectedMenuList, "Failed", error.message, logTime);
             window.alert("Menu Mapping Failed. " + error);
             window.location.href = "/admin/onboarding/menuMapping";
         }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
 import LogHandler from '../../LogHandler';
-import DateUtility from '../../DateUtility';
+import Util from '../../Util';
 
 export class CreateFunction extends Component {
 
@@ -35,8 +35,8 @@ export class CreateFunction extends Component {
     handleSubmit = event => {
         event.preventDefault()
         const { functionName } = this.state
-        let clientId = DateUtility("clientId")
-        let logTime = DateUtility("logTime")
+        let clientId = Util("clientId")
+        let logTime = Util("logTime")
         let userId = "emmanuel.afonrinwo";
         try {
             Axios.post('http://localhost:7070/swifthivebe/createUserFunction',
@@ -58,23 +58,23 @@ export class CreateFunction extends Component {
             ).then((response) => {
                 if (response.status === 200) {
                     if (response.data.responseCode === "00") {
-                        LogHandler("audit", clientId, userId, "CreateFunction", "Creation of function : " + functionName, "Successful", response.data.responseMessage, logTime);
+                        LogHandler("audit", clientId, userId, "CreateFunction", "User created function : " + functionName, "Successful", response.data.responseMessage, logTime);
                         window.alert(functionName + " function created successfully.");
                         window.location.href = "/admin/onboarding/createfunction";
                     } else {
-                        LogHandler("trace", clientId, userId, "CreateFunction", "Creation of function : " + functionName, "Failed", response.data.responseMessage, logTime);
+                        LogHandler("trace", clientId, userId, "CreateFunction", "User created function : " + functionName, "Failed", response.data.responseMessage, logTime);
                         window.alert(functionName + " function creation Failed: " + response.data.responseMessage);
                         window.location.href = "/admin/onboarding/createfunction";
                     }
                 }
             }, (error) => {
-                    LogHandler("trace", clientId, userId, "CreateFunction", "Creation of function : " + functionName, "Failed", error.message, logTime);
+                    LogHandler("trace", clientId, userId, "CreateFunction", "User created function : " + functionName, "Failed", error.message, logTime);
                     window.alert(functionName + " function creation Failed. " + error.message );
                     window.location.href = "/admin/onboarding/createfunction";
             });
             
         } catch (error) {
-            LogHandler("trace", clientId, userId, "CreateFunction", "Creation of function : " + functionName, "Failed", error.message, logTime);
+            LogHandler("trace", clientId, userId, "CreateFunction", "User created function : " + functionName, "Failed", error.message, logTime);
             window.alert(functionName + " function creation Failed. " + error.message );
             window.location.href = "/admin/onboarding/createfunction";
         }

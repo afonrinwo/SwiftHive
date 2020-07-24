@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
 import LogHandler from '../../LogHandler';
-import DateUtility from '../../DateUtility';
+import Util from '../../Util';
 
 export class CreateRole extends Component {
 
@@ -35,8 +35,8 @@ export class CreateRole extends Component {
     handleSubmit = event => {
         event.preventDefault()
         const { roleName } = this.state
-        let clientId = DateUtility("clientId")
-        let logTime = DateUtility("logTime")
+        let clientId = Util("clientId")
+        let logTime = Util("logTime")
         let userId = "emmanuel.afonrinwo";
         try {
             Axios.post('http://localhost:7070/swifthivebe/createUserRole',
@@ -59,23 +59,23 @@ export class CreateRole extends Component {
                 console.log(response);
                 if (response.status === 200) {
                     if (response.data.responseCode === "00") {
-                        LogHandler("audit", clientId, userId, "CreateRole", "CreateRole : "+ roleName, "Successful", response.data.responseMessage, logTime);
+                        LogHandler("audit", clientId, userId, "CreateRole", "User created role : "+ roleName, "Successful", response.data.responseMessage, logTime);
                         window.alert(roleName + " role created successfully.");
                         window.location.href = "/admin/onboarding/createRole";
                     } else {
-                        LogHandler("trace", clientId, userId, "CreateRole", "Failed", "CreateRole : " + roleName, response.data.responseMessage, logTime);
+                        LogHandler("trace", clientId, userId, "CreateRole", "Failed", "User created role : " + roleName, response.data.responseMessage, logTime);
                         window.alert(roleName + " role creation Failed: " + response.data.responseMessage);
                         window.location.href = "/admin/onboarding/createRole";
                     }
                 }
             }, (error) => {
-                    LogHandler("trace", clientId, userId, "CreateRole", "Failed", "CreateRole : " + roleName, error.message, logTime);
+                    LogHandler("trace", clientId, userId, "CreateRole", "Failed", "User created role :  " + roleName, error.message, logTime);
                     window.alert(roleName + " role creation Failed. " + error);
                     window.location.href = "/admin/onboarding/createRole";
             });
 
         } catch (error) {
-            LogHandler("trace", clientId, userId, "CreateRole", "Failed", "CreateRole : " + roleName, error.message, logTime);
+            LogHandler("trace", clientId, userId, "CreateRole", "Failed", "User created role : " + roleName, error.message, logTime);
             window.alert(roleName + " role creation Failed. " + error);
             window.location.href = "/admin/onboarding/createRole";
         }

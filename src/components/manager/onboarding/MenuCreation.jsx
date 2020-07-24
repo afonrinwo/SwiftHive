@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Axios from "axios";
 import LogHandler from '../../LogHandler';
-import DateUtility from '../../DateUtility';
+import Util from '../../Util';
 
 export class MenuCreation extends Component {
 
@@ -35,8 +35,8 @@ export class MenuCreation extends Component {
     handleSubmit = event => {
         event.preventDefault()
         const { menuName } = this.state
-        let clientId = DateUtility("clientId")
-        let logTime = DateUtility("logTime")
+        let clientId = Util("clientId")
+        let logTime = Util("logTime")
         let userId = "emmanuel.afonrinwo";
         try {
             Axios.post('http://localhost:7070/swifthivebe/createUserMenu',
@@ -58,23 +58,23 @@ export class MenuCreation extends Component {
             ).then((response) => {
                 if (response.status === 200) {
                     if (response.data.responseCode === "00") {
-                        LogHandler("audit", clientId, userId, "MenuCreation", "MenuCreation : " + menuName, "Successful", response.data.responseMessage, logTime);
+                        LogHandler("audit", clientId, userId, "MenuCreation", "User created menu : " + menuName, "Successful", response.data.responseMessage, logTime);
                         window.alert(menuName + " menu created successfully.");
                         window.location.href = "/admin/onboarding/menuCreation";
                     } else {
-                        LogHandler("trace", clientId, userId, "MenuCreation", "MenuCreation : " + menuName, "Failed", response.data.responseMessage, logTime);
+                        LogHandler("trace", clientId, userId, "MenuCreation", "User created menu : " + menuName, "Failed", response.data.responseMessage, logTime);
                         window.alert(menuName + " role creation Failed: " + response.data.responseMessage);
                         window.location.href = "/admin/onboarding/menuCreation";
                     }
                 }
             }, (error) => {
-                    LogHandler("trace", clientId, userId, "MenuCreation", "MenuCreation : " + menuName, "Failed", error, logTime);
+                    LogHandler("trace", clientId, userId, "MenuCreation", "User created menu : " + menuName, "Failed", error.message, logTime);
                     window.alert(menuName + " role creation Failed. " + error);
                     window.location.href = "/admin/onboarding/menuCreation";
             });
 
         } catch (error) {
-            LogHandler("trace", clientId, userId, "MenuCreation", "MenuCreation : " + menuName, "Failed", error, logTime);
+            LogHandler("trace", clientId, userId, "MenuCreation", "User created menu : " + menuName, "Failed", error.message, logTime);
             window.alert(menuName + " role creation Failed. " + error);
             window.location.href = "/admin/onboarding/menuCreation";
         }
